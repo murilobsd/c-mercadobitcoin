@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2020 Murilo Ijanc' <mbsd@m0x.ru>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+#ifndef _MERCADOBITCOIN_H
+#define _MERCADOBITCOIN_H
+
+#include <curl/curl.h>
+
+extern void msg(const char *);
+
+#define FREE_API_URL 	"https://www.mercadobitcoin.net/api/%s/%s/"
+#define USERAGENT	"mbc/0.1"
+
+/* coins */
+typedef enum coin_t CoinType;
+enum coin_t {
+	BTC,	/* Bitcoin */
+	LTC,	/* Litecoint */
+	BCH,	/* BCash */
+	XRP,	/* XRP (Ripple */
+	ETH	/* Ethereum */
+};
+
+/* methods http */
+enum http_method {
+	GET
+};
+
+typedef struct pkt FreeReq;
+typedef struct pkt FreeResp;
+struct pkt {
+	char *data;
+	char *offset;
+	size_t size;	
+};
+
+typedef struct free_api_t FreeApi;
+struct free_api_t {
+	enum http_method 	http_meth;
+	char 			*url;		/* url request*/	
+	CURLcode		*status_code;	/* http status code */
+	FreeReq			req;		/* data request */
+	FreeResp		resp;		/* data response */
+
+	/* methods */
+	void (*ticker)(FreeApi *, CoinType);
+};
+
+/* mb.c */
+extern FreeApi 	*free_api_init(void);
+extern void	 free_api_clean(FreeApi *);
+
+
+/* misc */
+#if DEBUG
+#define debug(fmt, ...) \
+        do { fprintf(stderr, "%s:%d:%s(): " fmt, __FILE__, \
+         __LINE__, __func__, ##__VA_ARGS__); } while (0)
+#else
+#define debug(fmt, ...) do {} while(0)
+#endif
+
+#endif /* _MERCADOBITCOIN_H */
