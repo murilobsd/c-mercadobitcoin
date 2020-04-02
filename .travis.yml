@@ -10,4 +10,4 @@ branches:
         - dev
 
 notifications:
-	email: false
+    email: false
