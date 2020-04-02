@@ -24,6 +24,21 @@
 #define TIMEOUT_CON	2	// timeout connection
 #define TIMEOUT		60 	// timeout 60 seconds
 
+/* errors */
+typedef enum mb_error_e {
+	// All fine
+	MBE_OK,
+
+	// Failed alloc memory
+	MBE_NOMEM,
+
+	// Timeout connection or handshake
+	MBE_TIMEOUT,
+
+	// Error count *always keep last*
+	MBE_COUNT,
+} mb_error_t;
+
 /* coins */
 typedef enum coin_t CoinType;
 enum coin_t {
@@ -61,8 +76,11 @@ struct free_api_t {
 };
 
 /* mb.c */
-extern FreeApi 	*free_api_init(void);
-extern void	 free_api_clean(FreeApi *);
+extern FreeApi 		*free_api_init(void);
+extern void	 	 free_api_clean(FreeApi *);
+
+/* errors.c */
+extern const char	*mb_error_str(mb_error_t err);
 
 
 /* misc */
