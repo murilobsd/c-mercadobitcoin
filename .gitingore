@@ -1,4 +1,4 @@
 *.o
 *.core
 ~.
-app
+examples/app
