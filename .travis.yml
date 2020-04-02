@@ -1,0 +1,13 @@
+language: c
+sudo: false
+
+script:
+  - make example
+
+branches:
+    only:
+        - master
+        - dev
+
+notifications:
+	email: false
