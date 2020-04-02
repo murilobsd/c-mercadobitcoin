@@ -19,10 +19,10 @@
 
 #include <curl/curl.h>
 
-extern void msg(const char *);
-
 #define FREE_API_URL 	"https://www.mercadobitcoin.net/api/%s/%s/"
-#define USERAGENT	"mbc/0.1"
+#define USERAGENT	"cmb/0.1"
+#define TIMEOUT_CON	2	// timeout connection
+#define TIMEOUT		60 	// timeout 60 seconds
 
 /* coins */
 typedef enum coin_t CoinType;
@@ -51,9 +51,10 @@ typedef struct free_api_t FreeApi;
 struct free_api_t {
 	enum http_method 	http_meth;
 	char 			*url;		/* url request*/	
-	CURLcode		*status_code;	/* http status code */
+	CURLcode		curl_code;	/* http status code */
 	FreeReq			req;		/* data request */
 	FreeResp		resp;		/* data response */
+	long			status_code;
 
 	/* methods */
 	void (*ticker)(FreeApi *, CoinType);

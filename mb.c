@@ -26,6 +26,7 @@ static void 		 free_resp(FreeResp *);
 static void 		 free_ticker(FreeApi *, CoinType);
 static const char 	*get_coin_str(CoinType);
 static void		 Do(FreeApi *);
+static size_t		 recv_data_cb(char *, size_t, size_t, void *);
 
 static void
 Do(FreeApi *a)
@@ -34,19 +35,42 @@ Do(FreeApi *a)
 
 	curl = curl_easy_init();
 
-	if (curl) {
+	if (curl != NULL) {
 		curl_easy_setopt(curl, CURLOPT_URL, a->url);
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, USERAGENT);
+#ifdef DEBUG
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-		curl_easy_perform(curl);
+#endif
+		/* FIX: dynamic options to timeout */
+		curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, TIMEOUT_CON);
+		curl_easy_setopt(curl, CURLOPT_TIMEOUT, TIMEOUT);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, recv_data_cb);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)a);
+		
+		// execute
+		a->curl_code = curl_easy_perform(curl);
+
+		// error curl
+		if (a->curl_code != CURLE_OK) {
+			debug("curl error ex: timeout ...");
+		} else {
+			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE,
+			&a->status_code);
+		}
+		
+		// error api
+		if (a->status_code != 200) {
+			debug("status code error");
+		}
+		// clean curl
 		curl_easy_cleanup(curl);
 	} else {
 		debug("deu pau");
 	}
 }
 
-
 static size_t
-recv_data_callback(char *ptr, size_t size, size_t nmemb, void *data)
+recv_data_cb(char *ptr, size_t size, size_t nmemb, void *data)
 {
 	size_t ptrsize = nmemb*size;
 	FreeApi *pr = (FreeApi *)data;
@@ -176,12 +200,4 @@ free_resp(FreeResp *r)
 		free(r->data);
 	if (r->offset != NULL)
 		free(r->offset);
-}
-
-
-
-void
-msg(const char *m)
-{
-	printf("%s\n", m);
 }
