@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://raw.githubusercontent.com/murilobsd/c-mercadobitcoin/master/mbc.jpg">
+	<img src="https://raw.githubusercontent.com/murilobsd/c-mercadobitcoin/master/assets/mbc.jpg">
 </p>
 
 # 
