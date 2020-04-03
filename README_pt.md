@@ -1,4 +1,8 @@
-# ![libmercadobitcoin](./mbc.jpg)
+<p align="center">
+	<img src="https://raw.githubusercontent.com/murilobsd/c-mercadobitcoin/master/mbc.jpg">
+</p>
+
+# 
 
 [![Build Status](https://img.shields.io/travis/murilobsd/c-mercadobitcoin/master?style=for-the-badge)](https://travis-ci.org/murilobsd/c-mercadobitcoin)
 [![license](https://img.shields.io/badge/License-BSD-blue.svg?style=for-the-badge)](LICENSE)
@@ -9,10 +13,8 @@
 - **Bugs:** https://github.com/murilobsd/c-mercadobitcoin/issues
 - **SO:** OpenBSD/Linux
 
-Biblioteca para comunicar com a API do MercadoBitcoin, essa biblioteca **não é
-oficial**.
+**POR FAVOR NÂO USE**
 
-**Prioridade no momento é fornecer os métodos de consulta para a API Pública.**
 
 ## Instalação
 
@@ -58,6 +60,49 @@ Caso queira compilar o exemplo basta digita o comando abaixo:
 
 ```bash
 make example
+```
+
+## Usando
+
+```c
+#include <stdio.h>
+
+#include <mb/mb.h>
+
+int
+main(int argc, char *argv[])
+{
+		FreeApi *f = freeapi_init();
+		MBData	d;
+
+		d = f->methods->ticker(f, BTC);
+
+		if (d.error != MBE_OK)
+				fprintf(stderr, "Error: %s\n", mb_get_strerro(d.error);
+		else {
+				printf("=========== Ticker ===========\n");
+				printf("High: %f\n", d.data.ticker->high);
+				printf("Low: %f\n", d.data.ticker->low);
+				printf("Vol: %f\n", d.data.ticker->vol);
+				printf("Last: %f\n", d.data.ticker->last);
+				printf("Buy: %f\n", d.data.ticker->buy);
+				printf("Sell: %f\n", d.data.ticker->sell);
+				printf("Date: %u\n", d.data.ticker->date);
+				printf("===============================\n");
+		}
+
+		clean_data(d);
+		clean_freeapi(f);
+		
+		return (0);
+}
+```
+
+compilando:
+
+```bash
+cc ticker.c -o ticker -lmbc
+./ticker
 ```
 
 ## ToDo
