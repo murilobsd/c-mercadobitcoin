@@ -1,8 +1,8 @@
 # C Mercadobitcoin
 
 [![Travis (.org) branch](https://img.shields.io/travis/murilobsd/c-mercadobitcoin/master?style=for-the-badge)](https://travis-ci.org/murilobsd/c-mercadobitcoin)
-
 [![license](https://img.shields.io/badge/License-BSD-blue.svg?style=for-the-badge)](LICENSE)
+
 - **Código Fonte:** https://github.com/murilobsd/c-mercadobitcoin
 - **Bugs:** https://github.com/murilobsd/c-mercadobitcoin/issues
 - **SO:** OpenBSD/Linux
@@ -58,6 +58,17 @@ Caso queira compilar o exemplo basta digita o comando abaixo:
 make example
 ```
 
+## ToDo
+
+Free Api:
+
+|Method|Status|Test|
+|------|------|----|
+|ticker|Implementing|-|
+|orderbook|-|-|
+|trades|-|-|
+|day-summary|-|-|
+
 ## Outras bibliotecas
 
 |Linguagem|Repo|
@@ -73,5 +84,5 @@ make example
 - [Mercado Bitcoin private trade API](https://www.mercadobitcoin.com.br/trade-api)
 
 
-1: https://curl.haxx.se
-2: http://json-c.github.io/json-c/
+[1]: https://curl.haxx.se
+[2]: http://json-c.github.io/json-c/
