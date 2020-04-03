@@ -1,7 +1,9 @@
-# C Mercadobitcoin
+# ![libmercadobitcoin](./mbc.jpg)
 
-[![Travis (.org) branch](https://img.shields.io/travis/murilobsd/c-mercadobitcoin/master?style=for-the-badge)](https://travis-ci.org/murilobsd/c-mercadobitcoin)
+[![Build Status](https://img.shields.io/travis/murilobsd/c-mercadobitcoin/master?style=for-the-badge)](https://travis-ci.org/murilobsd/c-mercadobitcoin)
 [![license](https://img.shields.io/badge/License-BSD-blue.svg?style=for-the-badge)](LICENSE)
+
+> Biblioteca não oficial para comunicação com API do [MercadoBitcoin][3]
 
 - **Código Fonte:** https://github.com/murilobsd/c-mercadobitcoin
 - **Bugs:** https://github.com/murilobsd/c-mercadobitcoin/issues
@@ -86,3 +88,4 @@ Free Api:
 
 [1]: https://curl.haxx.se
 [2]: http://json-c.github.io/json-c/
+[3]: https://www.mercadobitcoin.com.br
