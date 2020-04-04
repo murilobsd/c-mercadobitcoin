@@ -19,7 +19,7 @@
 #include <err.h>
 
 #include <curl/curl.h>
-#include <json-c/json.h>
+#include <jansson.h>
 
 #include "mb/free_api.h"
 #include "mb/http.h"
@@ -36,10 +36,54 @@ typedef struct {
 } FreeApiImpl;
 
 static void		ticker(FreeApi *, CoinType);
+static void		parse_ticker(char *);
 
 static FreeApiMethods 	freeapi_impl_methods = {
 	ticker
 };
+
+
+static void
+parse_ticker(char *data)
+{	
+	json_t *root;
+	json_error_t error;
+	json_t *high;
+	json_t *ticker;
+	const char *number; // sim era para ser um número decimal segundo api
+
+	root = json_loads(data, 0, &error);
+	
+	if (!root) {
+		fprintf(stdout, "error: on line %d: %s\n", error.line,
+		error.text);
+		return;
+	}
+
+	if (!json_is_object(root)) {
+		debug("error: root is not a object");
+		json_decref(root);
+		return;
+	}
+	
+	ticker = json_object_get(root, "ticker");
+	if (!json_is_object(ticker)) {
+		debug("error: ticker is not a object");
+		json_decref(root);
+		return;
+	}
+
+	high = json_object_get(ticker, "high");
+	if (!json_is_string(high)) {
+		debug("error: high is not a string\n");
+		json_decref(root);
+		return;
+	}
+
+	printf("Alta: %s\n", json_string_value(high));
+
+	json_decref(root);
+}
 
 void
 ticker(FreeApi *f, CoinType c)
@@ -65,8 +109,14 @@ ticker(FreeApi *f, CoinType c)
 	// mount url /<coin>/ticker/
 	url = join("/", joins);
 	printf("%s\n", url);
-	printf("%p\n", SELF->data);
+	
+	http_get(url, &SELF->resp);
+	
+	printf("%s\n", SELF->resp.data);
+	parse_ticker(SELF->resp.data);
+
 	free(url);
+	free(SELF->resp.data);
 
 	// TODO: clean ticker function switch ?
 	// TODO: clean mbdata pointer switch ?
@@ -91,6 +141,12 @@ freeapi_init() {
 	if (f == NULL)
 		err(1, "alloc free api");
 	f->ops= &freeapi_impl_methods;
+
+	/* init response */
+	f->resp.data= NULL;
+	f->resp.offset = NULL;
+	f->resp.size = 0;
+
 
 	return (FreeApi *)f;
 };

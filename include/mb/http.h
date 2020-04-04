@@ -38,6 +38,6 @@ struct pkt {
 	long status_code;
 };
 
-void http_get(const char *);
+void http_get(const char *, Resp *);
 
 #endif /* _MBHTTP_H */

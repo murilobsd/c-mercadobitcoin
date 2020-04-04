@@ -3,8 +3,9 @@ DEBUG=		-DDEBUG -g
 HDRS=		free_api.h http.h utils.h types.h
 SRCS=		free_api.c http.c utils.c
 OBJS=		free_api.o http.o utils.o
-LIB=		mercadobitcoin
+LIB=		mbc
 CFLAGS=		-Iinclude/ -I/usr/local/include 
+LDFLAGS=	-lcurl -ljansson
 # CFLAGS+=	-Wall -Werror -Wextra
 TFLAGS=		-R --exclude=.git --exclude=mb* --language-force=c .
 
@@ -25,7 +26,7 @@ debug: example
 
 example: free_api.o utils.o http.o
 	cc examples/main.c free_api.o utils.o http.o $(CFLAGS) \
-		-o examples/app -L/usr/local/lib -lcurl -ljson-c
+		-o examples/app -L/usr/local/lib $(LDFLAGS)
 clean:
 	rm -f *.o *.a *.core examples/app *.gcov *.gcno
 tags:

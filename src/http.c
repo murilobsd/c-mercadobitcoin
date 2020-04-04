@@ -25,12 +25,14 @@
 #include "mb/utils.h"
 
 static size_t 	recv_data_cb(char *, size_t, size_t, void *);
-static CURLcode request(const char *, HttpMethod, Resp *);
+static void request(const char *, HttpMethod, Resp *);
 
 void
-http_get(const char *url) { }
+http_get(const char *url, Resp *resp) {
+	request(url, GET, resp);
+}
 
-static CURLcode
+static void 
 request(const char *url, HttpMethod meth, Resp *resp)
 {
 	CURL *curl = NULL;
@@ -58,7 +60,7 @@ request(const char *url, HttpMethod meth, Resp *resp)
 			debug("curl error ex: timeout ...");
 		} else {
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE,
-			resp->status_code);
+			&resp->status_code);
 		}
 		
 		// error api
@@ -71,7 +73,7 @@ request(const char *url, HttpMethod meth, Resp *resp)
 		debug("deu pau");
 	}
 
-	return curl_code;
+	//return curl_code;
 
 }
 
