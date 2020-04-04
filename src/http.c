@@ -25,20 +25,25 @@
 #include "mb/utils.h"
 
 static size_t 	recv_data_cb(char *, size_t, size_t, void *);
-static void request(const char *, HttpMethod, Resp *);
+static MBError request(const char *, HttpMethod, Resp *);
 
-void
+MBError
 http_get(const char *url, Resp *resp) {
-	request(url, GET, resp);
+	MBError err = MBE_OK;
+	err = request(url, GET, resp);
+	return err;
 }
 
-static void 
+static MBError 
 request(const char *url, HttpMethod meth, Resp *resp)
 {
 	CURL *curl = NULL;
 	CURLcode curl_code;
+	MBError err = MBE_OK;
 
+	/* init curl */
 	curl = curl_easy_init();
+	
 
 	if (curl != NULL) {
 		curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -57,7 +62,9 @@ request(const char *url, HttpMethod meth, Resp *resp)
 
 		// error curl
 		if (curl_code != CURLE_OK) {
-			debug("curl error ex: timeout ...");
+			debug("curl error ex: %s\n",
+			curl_easy_strerror(curl_code));
+			err = MBE_CURL_CODE;
 		} else {
 			curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE,
 			&resp->status_code);
@@ -65,16 +72,17 @@ request(const char *url, HttpMethod meth, Resp *resp)
 		
 		// error api
 		if (resp->status_code != 200) {
-			debug("status code error");
+			debug("status code error %ld\n", resp->status_code);
+			err = MBE_HTTP_API;
 		}
 		// clean curl
 		curl_easy_cleanup(curl);
 	} else {
-		debug("deu pau");
+		debug("failed alloc curl\n");
+		err = MBE_NOMEM;
 	}
 
-	//return curl_code;
-
+	return err;
 }
 
 static size_t

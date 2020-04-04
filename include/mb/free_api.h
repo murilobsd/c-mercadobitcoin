@@ -58,7 +58,8 @@ struct order_book {
 typedef struct free_api FreeApi;
 typedef struct api_methods {
 	//ApiType _type;
-	void (*ticker)(FreeApi *, CoinType);
+	int 	(*ticker)(FreeApi *, CoinType);
+	MBError (*get_error)(FreeApi *);
 	//void (*orderbook)(FreeApi *, CointType);
 	//void (*trades)(FreeApi *, CointType, ParameterPtr);
 	//void (*day_summary)(FreeApi *, CointType, ParameterPtr);

@@ -33,15 +33,24 @@ typedef struct {
 	/* internals */
 	Resp resp; 		/* response */
 	MBData *data;		/* data */
+	MBError error;
 } FreeApiImpl;
 
-static void		ticker(FreeApi *, CoinType);
+static int		ticker(FreeApi *, CoinType);
+static MBError		get_error(FreeApi *);
 static void		parse_ticker(char *);
 
 static FreeApiMethods 	freeapi_impl_methods = {
-	ticker
+	ticker,
+	get_error,
 };
 
+
+static MBError
+get_error(FreeApi *f)
+{
+	return SELF->error;
+}
 
 static void
 parse_ticker(char *data)
@@ -88,20 +97,21 @@ parse_ticker(char *data)
 	high_d = xstrtod(number, &err);
 
 	if (err != MBE_OK)
-		printf("Erro: %*s\n", mb_error_str(err));
+		printf("Erro: %s\n", mb_error_str(err));
 	else
 		printf("Alta Double: %f\n", high_d);
 
 	json_decref(root);
 }
 
-void
+int
 ticker(FreeApi *f, CoinType c)
 {
 	//Ticker *t = NULL;
 	char *url;
 	const char *coin_symbol = get_coin_symbol(c);
 	const char *method_name = "ticker";
+	MBError err = MBE_OK;
 
 	const char *parts_url[5];
 
@@ -115,20 +125,27 @@ ticker(FreeApi *f, CoinType c)
 	url = join("/", parts_url);
 	printf("%s\n", url);
 	
-	//http_get(url, &SELF->resp);
-	
-	//printf("%s\n", SELF->resp.data);
+	err = http_get(url, &SELF->resp);
+
+	if (err != MBE_OK) {
+		debug("error request sticker\n");
+		SELF->error = err;
+		goto err;
+	}
+
 	//parse_ticker(SELF->resp.data);
 
 	free(url);
-	//free(SELF->resp.data);
-
-	// TODO: clean ticker function switch ?
-	// TODO: clean mbdata pointer switch ?
+	free(SELF->resp.data);
 	// TODO: get type function!
 	// TODO: raw data in mbdata
 
 	// request check error status code or timeout
+	return 0;
+err:
+	if(url != NULL) free(url);
+	if(SELF->resp.data != NULL) free(SELF->resp.data);
+	return -1;
 }
 
 FreeApi *
@@ -144,6 +161,11 @@ freeapi_init() {
 	f->resp.data= NULL;
 	f->resp.offset = NULL;
 	f->resp.size = 0;
+
+	/* error ok */
+	f->error = MBE_OK;
+
+	f->data = NULL;
 
 
 	return (FreeApi *)f;

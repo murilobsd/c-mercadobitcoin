@@ -17,6 +17,8 @@
 #ifndef _MBHTTP_H
 #define _MBHTTP_H
 
+#include "mb/types.h"
+
 #define BASE_URL 	"https://www.mercadobitcoin.net/api"
 #define USERAGENT	"cmb/0.1"
 #define TIMEOUT_CON	2	// timeout connection
@@ -38,6 +40,6 @@ struct pkt {
 	long status_code;
 };
 
-void http_get(const char *, Resp *);
+MBError http_get(const char *, Resp *);
 
 #endif /* _MBHTTP_H */
