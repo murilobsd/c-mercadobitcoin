@@ -1,8 +1,8 @@
 CC=		cc
 DEBUG=		-DDEBUG -g
 HDRS=		free_api.h http.h utils.h types.h
-SRCS=		free_api.c http.c utils.c
-OBJS=		free_api.o http.o utils.o
+SRCS=		free_api.c http.c utils.c error.c
+OBJS=		free_api.o http.o utils.o error.o
 LIB=		mbc
 CFLAGS=		-Iinclude/ -I/usr/local/include 
 LDFLAGS=	-lcurl -ljansson
@@ -19,13 +19,13 @@ http.o:
 utils.o:
 	$(CC) -c src/utils.c $(CFLAGS)
 error.o:
-	cc -c error.c -I/usr/local/include -I.
+	$(CC) -c src/error.c $(CFLAGS)
 
 debug: CFLAGS += $(DEBUG)
 debug: example
 
-example: free_api.o utils.o http.o
-	cc examples/main.c free_api.o utils.o http.o $(CFLAGS) \
+example: free_api.o utils.o http.o error.o
+	cc examples/main.c free_api.o utils.o http.o error.o $(CFLAGS) \
 		-o examples/app -L/usr/local/lib $(LDFLAGS)
 clean:
 	rm -f *.o *.a *.core examples/app *.gcov *.gcno

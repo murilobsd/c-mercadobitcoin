@@ -14,15 +14,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "mb.h"
+#include "mb/types.h"
 
 const char * const MB_ERROR_STRS[] = 
 {
     	"MBE_OK",
     	"MBE_NOMEM",
+	"MBE_ERANGE",
     	"MBE_TIMEOUT",
     	"MBE_NOT_FOUND_COIN",
     	"MBE_NOT_FOUND_METHOD",
+	"MBE_CONVERT_STRTOD",
 };
 
 const char * 
