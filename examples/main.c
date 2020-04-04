@@ -14,20 +14,15 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "mb.h"
+#include "mb/free_api.h"
 
 int
 main(int argc, char *argv[])
 {
-	FreeApi *f_api = free_api_init();
+	FreeApi *f = freeapi_init();
 
-	f_api->ticker(f_api, BTC);
+	f->ops->ticker(f, BTC);
 
-	//if(f_api->error != NULL) { imprimir o erro };
-	printf("%s\n\n", f_api->resp.data);
-	printf("Status Code: %ld\n", f_api->status_code);
-
-	free_api_clean(f_api);
-
+	clean_freeapi(f);
 	return (0);
 }
