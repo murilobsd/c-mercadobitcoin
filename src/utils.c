@@ -66,7 +66,7 @@ get_coin_symbol(CoinType c)
  * array of string end a NULL value.
  */
 char *
-join(const char *sep, char **s_array)
+join(const char *sep, const char **s_array)
 {
 	char *str;
 	char *ptr;

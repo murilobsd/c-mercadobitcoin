@@ -21,7 +21,7 @@
 
 #include "mb/types.h"
 
-char 		*join(const char *, char **);
+char 		*join(const char *, const char **);
 const char 	*get_coin_symbol(CoinType);
 double		xstrtod(const char *, MBError *);
 

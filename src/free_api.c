@@ -88,7 +88,7 @@ parse_ticker(char *data)
 	high_d = xstrtod(number, &err);
 
 	if (err != MBE_OK)
-		printf("Erro: %s\n", mb_error_str(err));
+		printf("Erro: %*s\n", mb_error_str(err));
 	else
 		printf("Alta Double: %f\n", high_d);
 
@@ -100,33 +100,28 @@ ticker(FreeApi *f, CoinType c)
 {
 	//Ticker *t = NULL;
 	char *url;
-	//const char *coin_symbol = get_coin_symbol(c);
-	char *joins[] = {
-	 	BASE_URL,	
-		"BTC", "ticker", "", NULL
-	};
-/*
-	t = (Ticker *)malloc(sizeof(Ticker));
-	
-	if (t == NULL) {
-		mb_data._type = TICKER;
-		mb_data.size = 0;
-		mb_data.error = MBE_NOMEM;
-		mb_data.data.ticker = NULL;
-		return mb_data;
-	}
-*/
+	const char *coin_symbol = get_coin_symbol(c);
+	const char *method_name = "ticker";
+
+	const char *parts_url[5];
+
+	parts_url[0] = BASE_URL;
+	parts_url[1] = coin_symbol;
+	parts_url[2] = method_name;
+	parts_url[3] = "";
+	parts_url[4] = NULL;
+
 	// mount url /<coin>/ticker/
-	url = join("/", joins);
+	url = join("/", parts_url);
 	printf("%s\n", url);
 	
-	http_get(url, &SELF->resp);
+	//http_get(url, &SELF->resp);
 	
-	printf("%s\n", SELF->resp.data);
-	parse_ticker(SELF->resp.data);
+	//printf("%s\n", SELF->resp.data);
+	//parse_ticker(SELF->resp.data);
 
 	free(url);
-	free(SELF->resp.data);
+	//free(SELF->resp.data);
 
 	// TODO: clean ticker function switch ?
 	// TODO: clean mbdata pointer switch ?
@@ -134,13 +129,6 @@ ticker(FreeApi *f, CoinType c)
 	// TODO: raw data in mbdata
 
 	// request check error status code or timeout
-/*
-	mb_data._type = TICKER;
-	mb_data.size = 1;
-	mb_data.error = MBE_OK;
-	mb_data.data.ticker = t;
-*/
-	// parse_data pass mb_data and Implement reponse struct check error;
 }
 
 FreeApi *
