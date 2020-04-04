@@ -14,14 +14,23 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "mb/free_api.h"
+#include "mb.h"
 
 int
 main(int argc, char *argv[])
 {
 	FreeApi *f = freeapi_init();
+	Ticker t;
 
-	f->ops->ticker(f, BTC);
+	if (f->ops->ticker(f, BTC) == - 1) {
+		MBError err = f->ops->get_error(f);
+		printf("Erro: %s\n", mb_error_str(err));
+		clean_freeapi(f);
+		return 1;
+	}
+
+	//f->ops->get_data(f, &t);
+	
 
 	clean_freeapi(f);
 	return (0);
