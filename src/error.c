@@ -21,10 +21,12 @@ const char * const MB_ERROR_STRS[] =
     	"MBE_OK",
     	"MBE_NOMEM",
     	"MBE_TIMEOUT",
+    	"MBE_NOT_FOUND_COIN",
+    	"MBE_NOT_FOUND_METHOD",
 };
 
 const char * 
-mb_error_str(mb_error_t err)
+mb_error_str(MBError err)
 {
     const char* err_str = NULL;
 
