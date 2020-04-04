@@ -25,6 +25,8 @@ const char * const MB_ERROR_STRS[] =
     	"MBE_NOT_FOUND_COIN",
     	"MBE_NOT_FOUND_METHOD",
 	"MBE_CONVERT_STRTOD",
+	"MBE_CURL_CODE",
+	"MBE_HTTP_API",
 };
 
 const char * 

@@ -82,6 +82,12 @@ typedef enum mb_error_e {
 	// Error converted string to double
 	MBE_CONVERT_STRTOD,
 
+	// Error curl code
+	MBE_CURL_CODE,
+
+	// Error HTTP Api Code
+	MBE_HTTP_API,
+
 	// Error count *always keep last*
 	MBE_COUNT,
 } MBError;
