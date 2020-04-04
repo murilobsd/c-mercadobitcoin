@@ -23,6 +23,7 @@
 
 char 		*join(const char *, char **);
 const char 	*get_coin_symbol(CoinType);
+double		xstrtod(const char *, MBError *);
 
 #if DEBUG
 #define debug(fmt, ...) \

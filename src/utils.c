@@ -14,10 +14,32 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "mb/utils.h"
+
+double
+xstrtod(const char *strnum, MBError *err)
+{
+	double result;
+	char *endptr;
+
+	result = strtod(strnum,  &endptr);
+
+	if (result == 0) {
+		if (errno == ERANGE) {
+			debug("Out of range convert %s to double", strnum);
+			*err = MBE_ERANGE;
+		} else {
+			debug("Failed convert %s to double", strnum);
+			*err = MBE_CONVERT_STRTOD;
+		}
+	}
+
+	return result;
+}
 
 const char *
 get_coin_symbol(CoinType c)
