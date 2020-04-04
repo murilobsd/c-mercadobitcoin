@@ -11,7 +11,7 @@
 
 - **Source code:** https://github.com/murilobsd/c-mercadobitcoin
 - **Bug reports:** https://github.com/murilobsd/c-mercadobitcoin/issues
-- **OS:** OpenBSD/Linux
+- **OS:** OpenBSD, Linux
 
 **PLEASE DO NOT USE**
 
@@ -19,8 +19,8 @@
 
 Before installing the library has **dependencies**:
 
-1. [libcurl 3](1) 
-2. [json-c](2)
+1. [libcurl 3][1] 
+2. [jannson][2]
 
 
 ```bash
@@ -51,25 +51,27 @@ int
 main(int argc, char *argv[])
 {
 		FreeApi *f = freeapi_init();
-		MBData	d;
+		Sticker *st;
 
-		d = f->methods->ticker(f, BTC);
+		f->ops->ticker(f, BTC);
 
-		if (d.error != MBE_OK)
-				fprintf(stderr, "Error: %s\n", mb_get_strerro(d.error);
-		else {
-				printf("=========== Ticker ===========\n");
-				printf("High: %f\n", d.data.ticker->high);
-				printf("Low: %f\n", d.data.ticker->low);
-				printf("Vol: %f\n", d.data.ticker->vol);
-				printf("Last: %f\n", d.data.ticker->last);
-				printf("Buy: %f\n", d.data.ticker->buy);
-				printf("Sell: %f\n", d.data.ticker->sell);
-				printf("Date: %u\n", d.data.ticker->date);
-				printf("===============================\n");
+		if (f->ops->get_error(f) != MBE_OK) {
+				fprintf(stderr, "Error: %s\n", mb_get_strerro(f);
+				return (1);
 		}
 
-		clean_data(d);
+		st = (Sticker *)f->ops->get_data(f);
+		
+		printf("=========== Ticker ============\n");
+		printf("High: %f\n", st->high);
+		printf("Low: %f\n", st->low);
+		printf("Vol: %f\n", st->vol);
+		printf("Last: %f\n", st->last);
+		printf("Buy: %f\n", st->buy);
+		printf("Sell: %f\n", st->sell);
+		printf("Date: %u\n", st->date);
+		printf("===============================\n");
+
 		clean_freeapi(f);
 		
 		return (0);
@@ -110,5 +112,5 @@ Free Api:
 
 
 [1]: https://curl.haxx.se
-[2]: http://json-c.github.io/json-c/
+[2]: http://www.digip.org/jansson/
 [3]: https://www.mercadobitcoin.com.br
