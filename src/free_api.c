@@ -50,7 +50,8 @@ parse_ticker(char *data)
 	json_error_t error;
 	json_t *high;
 	json_t *ticker;
-	const char *number; // sim era para ser um número decimal segundo api
+	double high_d;
+	MBError err = MBE_OK;
 
 	root = json_loads(data, 0, &error);
 	
@@ -80,7 +81,16 @@ parse_ticker(char *data)
 		return;
 	}
 
-	printf("Alta: %s\n", json_string_value(high));
+	const char *number = json_string_value(high);
+
+	printf("Alta: %s\n", number);
+
+	high_d = xstrtod(number, &err);
+
+	if (err != MBE_OK)
+		printf("Erro: %s\n", mb_error_str(err));
+	else
+		printf("Alta Double: %f\n", high_d);
 
 	json_decref(root);
 }

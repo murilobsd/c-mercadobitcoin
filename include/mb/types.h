@@ -67,6 +67,9 @@ typedef enum mb_error_e {
 	// Failed alloc memory
 	MBE_NOMEM,
 
+	// Failed range value
+	MBE_ERANGE,
+
 	// Timeout connection or handshake
 	MBE_TIMEOUT,
 	
@@ -75,6 +78,9 @@ typedef enum mb_error_e {
 
 	// Not found method
 	MBE_NOT_FOUND_METHOD,
+
+	// Error converted string to double
+	MBE_CONVERT_STRTOD,
 
 	// Error count *always keep last*
 	MBE_COUNT,
