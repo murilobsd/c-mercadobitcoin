@@ -1,0 +1,6 @@
+*.a
+*.o
+*.core
+~.
+examples/app
+tags
