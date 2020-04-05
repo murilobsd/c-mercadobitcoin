@@ -14,35 +14,12 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#include "mb/error.h"
+#ifndef _MBERROR_H
+#define _MBERROR_H
 
-const char * const MB_ERROR_STRS[] = 
-{
-    	"MBE_OK",
-    	"MBE_NOMEM",
-	"MBE_ERANGE",
-    	"MBE_TIMEOUT",
-    	"MBE_NOT_FOUND_COIN",
-    	"MBE_NOT_FOUND_METHOD",
-	"MBE_CONVERT_STRTOD",
-	"MBE_CURL_CODE",
-	"MBE_HTTP_API",
-	"MBE_PARSE_JSON",
-	"MBE_PARSE_TICKER",
-};
+#include "mb/types.h"
 
-const char * 
-mb_error_str(MBError err)
-{
-    const char* err_str = NULL;
+extern const char 	*mb_error_str(MBError);
 
-    if (err >= MBE_COUNT) {
-        goto done;
-    }
-
-    err_str = MB_ERROR_STRS[err];
-
-done:
-    return err_str;
-}
+#endif /* _MBERROR_H */
 

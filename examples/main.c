@@ -29,8 +29,17 @@ main(int argc, char *argv[])
 		return 1;
 	}
 
-	//f->ops->get_data(f, &t);
-	
+	f->ops->get_data(f, &t);
+
+	printf("=========== Ticker ============\n");
+	printf("High: %f\n", t.high);
+	printf("Low: %f\n", t.low);
+	printf("Vol: %f\n", t.vol);
+	printf("Last: %f\n", t.last);
+	printf("Buy: %f\n", t.buy);
+	printf("Sell: %f\n", t.sell);
+	printf("Date: %u\n", t.date);
+	printf("===============================\n");
 
 	clean_freeapi(f);
 	return (0);

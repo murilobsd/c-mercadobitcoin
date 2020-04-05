@@ -50,7 +50,7 @@ typedef struct {
 	double last;
 	double buy;
 	double sell;
-	uint64_t date;
+	int date;
 	
 } Ticker;
 
@@ -88,6 +88,12 @@ typedef enum mb_error_e {
 	// Error HTTP Api Code
 	MBE_HTTP_API,
 
+	// Error parse JSON
+	MBE_PARSE_JSON,
+
+	// Error parse Ticker
+	MBE_PARSE_TICKER,
+
 	// Error count *always keep last*
 	MBE_COUNT,
 } MBError;
@@ -96,10 +102,10 @@ typedef enum mb_error_e {
 typedef struct {
 	DataType _type;
 	union {
-		Ticker *ticker;
-	} data;
-	size_t size;
-	MBError error;
+		Ticker ticker;
+	} value;
+	size_t length;
+	char *raw; /* raw data */
 } MBData;
 
 #endif /* _MBTYPES_H */

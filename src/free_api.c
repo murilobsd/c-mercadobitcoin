@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <err.h>
+#include <string.h>
 
 #include <curl/curl.h>
 #include <jansson.h>
@@ -24,6 +25,7 @@
 #include "mb/free_api.h"
 #include "mb/http.h"
 #include "mb/utils.h"
+#include "mb/error.h"
 
 #define SELF ((FreeApiImpl *)f)
 
@@ -32,18 +34,45 @@ typedef struct {
 
 	/* internals */
 	Resp resp; 		/* response */
-	MBData *data;		/* data */
+	MBData data;		/* data */
 	MBError error;
 } FreeApiImpl;
 
 static int		ticker(FreeApi *, CoinType);
 static MBError		get_error(FreeApi *);
-static void		parse_ticker(char *);
+static MBError		parse_ticker(FreeApiImpl *);
+static void		get_data(FreeApi *, void *);
 
 static FreeApiMethods 	freeapi_impl_methods = {
 	ticker,
 	get_error,
+	get_data,
 };
+
+static void
+get_data(FreeApi *f, void *data)
+{
+	// 1. Checar se realmente a data existe?
+	// 2. Checar qual e o tipo de dado
+	// 3. Cast no dado
+	Ticker *d = (Ticker *)data;
+
+	/*TODO: implementar 1 */
+	switch (SELF->data._type) {
+	case TICKER:
+		d->high = SELF->data.value.ticker.high;
+		d->low = SELF->data.value.ticker.low;
+		d->vol = SELF->data.value.ticker.vol;
+		d->last = SELF->data.value.ticker.last;
+		d->buy = SELF->data.value.ticker.buy;
+		d->sell = SELF->data.value.ticker.sell;
+		d->date	= SELF->data.value.ticker.date;
+		break;
+	default:
+		debug("Dado não existe\n");
+		break;
+	}
+}
 
 
 static MBError
@@ -52,56 +81,112 @@ get_error(FreeApi *f)
 	return SELF->error;
 }
 
-static void
-parse_ticker(char *data)
+static MBError
+parse_ticker(FreeApiImpl *f)
 {	
-	json_t *root;
 	json_error_t error;
-	json_t *high;
-	json_t *ticker;
-	double high_d;
+	json_t *root, *ticker, *high, *low, *vol, *last, *buy, *sell, *date;
+	double highd, lowd, vold, lastd, buyd, selld;
+	int datei;
 	MBError err = MBE_OK;
 
-	root = json_loads(data, 0, &error);
+
+	root = json_loads(f->data.raw, 0, &error);
 	
 	if (!root) {
-		fprintf(stdout, "error: on line %d: %s\n", error.line,
-		error.text);
-		return;
+		debug("error: on line %d: %s\n", error.line, error.text);
+		err = MBE_PARSE_JSON;
+		goto error;
 	}
 
 	if (!json_is_object(root)) {
 		debug("error: root is not a object");
-		json_decref(root);
-		return;
+		err = MBE_PARSE_JSON;
+		goto error;
 	}
-	
 	ticker = json_object_get(root, "ticker");
 	if (!json_is_object(ticker)) {
 		debug("error: ticker is not a object");
-		json_decref(root);
-		return;
+		err = MBE_PARSE_JSON;
+		goto error;
 	}
 
+	/* apartir desse momento estamos dentro da estrutura do ticker */
 	high = json_object_get(ticker, "high");
 	if (!json_is_string(high)) {
 		debug("error: high is not a string\n");
-		json_decref(root);
-		return;
+		err = MBE_PARSE_JSON;
+		goto error;
 	}
 
-	const char *number = json_string_value(high);
+	low = json_object_get(ticker, "low");
+	if (!json_is_string(low)) {
+		debug("error: low is not a string\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
+	vol = json_object_get(ticker, "vol");
+	if (!json_is_string(vol)) {
+		debug("error: vol is not a string\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
+	last = json_object_get(ticker, "last");
+	if (!json_is_string(last)) {
+		debug("error: last is not a string\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
+	buy = json_object_get(ticker, "buy");
+	if (!json_is_string(buy)) {
+		debug("error: buy is not a string\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
+	sell = json_object_get(ticker, "sell");
+	if (!json_is_string(sell)) {
+		debug("error: sell is not a string\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
+	date = json_object_get(ticker, "date");
+	if (!json_is_integer(date)) {
+		debug("error: date is not a integer\n");
+		err = MBE_PARSE_JSON;
+		goto error;
+	}
 
-	printf("Alta: %s\n", number);
+	highd = xstrtod(json_string_value(high), &err);
+	lowd = xstrtod(json_string_value(low), &err);
+	vold = xstrtod(json_string_value(vol), &err);
+	lastd = xstrtod(json_string_value(last), &err);
+	buyd = xstrtod(json_string_value(buy), &err);
+	selld = xstrtod(json_string_value(sell), &err);
+	datei = (int)json_integer_value(date);
 
-	high_d = xstrtod(number, &err);
+	if (err != MBE_OK) {
+		debug("Erro: %s\n", mb_error_str(err));
+		goto error;
+	}
 
-	if (err != MBE_OK)
-		printf("Erro: %s\n", mb_error_str(err));
-	else
-		printf("Alta Double: %f\n", high_d);
+	// setamos date
+	f->data.value.ticker.high = highd;
+	f->data.value.ticker.low = lowd;
+	f->data.value.ticker.vol = vold;
+	f->data.value.ticker.last = lastd;
+	f->data.value.ticker.buy = buyd;
+	f->data.value.ticker.sell = selld;
+	f->data.value.ticker.date = datei;
+	f->data.length = 1;
+	f->data._type = TICKER;
 
-	json_decref(root);
+error:
+	/* TODO: melhorar isso */
+	if (root) {
+		json_decref(root);
+	}
+
+	return err;
 }
 
 int
@@ -123,29 +208,31 @@ ticker(FreeApi *f, CoinType c)
 
 	// mount url /<coin>/ticker/
 	url = join("/", parts_url);
-	printf("%s\n", url);
-	
+	debug("request url: %s\n", url);
+
 	err = http_get(url, &SELF->resp);
 
 	if (err != MBE_OK) {
-		debug("error request sticker\n");
+		debug("failed request sticker\n");
 		SELF->error = err;
-		goto err;
+		//goto err;
+		return -1;
 	}
 
-	//parse_ticker(SELF->resp.data);
+	// precisamos setar os dados obtidos no reponse e limparmos depois o
+	// response, agora temos o dado retornado pela api no MBdata
+	SELF->data.raw = strdup(SELF->resp.data);
+	SELF->data.length = 1; // isso porque a api retorna somente um dado;
+	// caso fosse um array teríamos que colocar a quantidade retornado
+	// pela api como será o caso do orderbook (1000)
 
-	free(url);
-	free(SELF->resp.data);
-	// TODO: get type function!
-	// TODO: raw data in mbdata
+	err = parse_ticker(SELF);
 
-	// request check error status code or timeout
+//err:
+	if(url != NULL)
+		free(url);
+	/* isso deveria ser feito pela clean_freeapi() */
 	return 0;
-err:
-	if(url != NULL) free(url);
-	if(SELF->resp.data != NULL) free(SELF->resp.data);
-	return -1;
 }
 
 FreeApi *
@@ -165,15 +252,21 @@ freeapi_init() {
 	/* error ok */
 	f->error = MBE_OK;
 
-	f->data = NULL;
-
-
 	return (FreeApi *)f;
 };
 
 void
 clean_freeapi(FreeApi *f)
 {
-	if (f == NULL) return;
+	if (SELF == NULL) return;
+	if(SELF->resp.data != NULL) {
+		SELF->resp.size = 0;
+		SELF->resp.offset = 0;
+		SELF->resp.status_code = 0;
+		free(SELF->resp.data);
+	}
+	if(SELF->data.raw != NULL) {
+		free(SELF->data.raw);
+	}
 	free(f);
 }

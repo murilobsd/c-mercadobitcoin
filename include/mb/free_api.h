@@ -60,6 +60,7 @@ typedef struct api_methods {
 	//ApiType _type;
 	int 	(*ticker)(FreeApi *, CoinType);
 	MBError (*get_error)(FreeApi *);
+	void	(*get_data)(FreeApi *, void *);
 	//void (*orderbook)(FreeApi *, CointType);
 	//void (*trades)(FreeApi *, CointType, ParameterPtr);
 	//void (*day_summary)(FreeApi *, CointType, ParameterPtr);
