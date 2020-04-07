@@ -19,12 +19,20 @@
 
 typedef struct order_t * OrderPtr;
 
-OrderPtr	init_order(double, double);
+typedef enum {
+        OR_ASK,
+        OR_BID,
+        OR_INVALID
+} OrderType;
+
+OrderPtr	init_order(OrderType, double, double);
 void		order_free(OrderPtr);
 const char 	*order_get_modname(void);
 double		order_get_price(OrderPtr);
 double		order_get_quantity(OrderPtr);
+OrderType       order_get_type(OrderPtr);
 void		order_set_price(struct order_t *, double);
 void		order_set_quantity(struct order_t *, double);
+void		order_set_type(struct order_t *, OrderType);
 
 #endif /* _ORDER_H */

@@ -25,17 +25,41 @@ void
 tearDown(void) {}
 
 void
-test_init_order_ok(void)
+test_init_order_bid_ok(void)
 {
 	OrderPtr o;
 	double price, qtd;
+        OrderType t;
 
-	o = init_order(10410.00006000, 2.09190016);
+	o = init_order(OR_BID, 10410.00006000, 2.09190016);
 	
 	price = order_get_price(o);
 	qtd = order_get_quantity(o);
+	t = order_get_type(o);
 
 	TEST_ASSERT_NOT_NULL(o);
+	TEST_ASSERT_EQUAL_INT(1, t);
+	TEST_ASSERT_EQUAL_DOUBLE(10410.00006000, price);
+	TEST_ASSERT_EQUAL_DOUBLE(2.09190016, qtd);
+
+	order_free(o);
+}
+
+void
+test_init_order_ask_ok(void)
+{
+	OrderPtr o;
+	double price, qtd;
+        OrderType t;
+
+	o = init_order(OR_ASK, 10410.00006000, 2.09190016);
+	
+	price = order_get_price(o);
+	qtd = order_get_quantity(o);
+	t = order_get_type(o);
+
+	TEST_ASSERT_NOT_NULL(o);
+	TEST_ASSERT_EQUAL_INT(0, t);
 	TEST_ASSERT_EQUAL_DOUBLE(10410.00006000, price);
 	TEST_ASSERT_EQUAL_DOUBLE(2.09190016, qtd);
 
@@ -46,7 +70,8 @@ int
 main(void)
 {
 	UNITY_BEGIN();
-	RUN_TEST(test_init_order_ok);
+	RUN_TEST(test_init_order_ask_ok);
+	RUN_TEST(test_init_order_bid_ok);
 	UNITY_END();
 	return (0);
 }

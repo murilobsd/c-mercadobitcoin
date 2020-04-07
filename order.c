@@ -26,8 +26,14 @@
 struct order_t {
 	double price;
 	double quantity;
+        OrderType type;
 };
 
+void
+order_set_type(struct order_t *o, OrderType t)
+{
+	o->type = t;
+}
 
 void
 order_set_price(struct order_t *o, double data)
@@ -59,8 +65,17 @@ order_get_quantity(OrderPtr o)
 		return DEF_VAL_ERR;
 }
 
+OrderType
+order_get_type(OrderPtr o) 
+{
+	if (o != NULL)
+		return SELF->type;
+	else
+		return OR_INVALID;
+}
+
 OrderPtr
-init_order(double price, double qtd)
+init_order(OrderType t, double price, double qtd)
 {
 	OrderPtr o;
 
@@ -72,6 +87,7 @@ init_order(double price, double qtd)
 	/* set values */
 	order_set_price(SELF, price);
 	order_set_quantity(SELF, price);
+	order_set_type(SELF, t);
 
 	return o;
 }
