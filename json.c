@@ -15,9 +15,12 @@
  */
 
 #include <errno.h>
+#include <stdio.h>
 
 #include "json.h"
 
+
+/* TODO: put this on utils.c */
 static double xstrtod(const char *);
 
 static double
@@ -39,6 +42,58 @@ xstrtod(const char *strnum)
 	return result;
 }
 
+double
+json_get_array_double(json_t *node, size_t index)
+{
+	json_t *obj;
+	double value;
+
+	obj = json_array_get(node, index);
+        //printf("Obj: %p\n", obj);
+        //printf("Type: %d\n", json_typeof(obj));
+
+	if (!json_is_number(obj)){
+                printf("json get array no double value\n");
+		json_free(node);
+        }
+
+	value = json_number_value(obj);
+
+	return value;
+}
+
+double
+json_get_double(json_t *node, const char *nodename)
+{
+	json_t *obj;
+	double value;
+
+	obj = json_object_get(node, nodename);
+
+	if (!json_is_real(obj))
+		json_free(node);
+
+	value = json_real_value(obj);
+
+	return value;
+}
+
+json_t *
+json_get_array(json_t *node, const char *nodename, size_t *size)
+{
+	json_t *obj;
+
+	obj = json_object_get(node, nodename);
+
+	if (!json_is_array(obj))
+		json_free(node);
+
+	*size = json_array_size(obj);
+
+	return obj;
+}
+
+
 int
 json_get_integer(json_t *node, const char *nodename)
 {
@@ -51,8 +106,8 @@ json_get_integer(json_t *node, const char *nodename)
 		json_free(node);
 
 	value = json_integer_value(obj);
+
 	return value;
-	
 }
 
 double

@@ -21,12 +21,31 @@
 
 const char *data = "{\"ticker\":{\"high\":\"37700.00000000\",\"low\":\"35260.00000000\",\"vol\":\"368.90539471\",\"last\":\"37132.55014000\",\"buy\":\"37132.55014000\",\"sell\":\"37298.99997000\",\"open\":\"35456.24000000\",\"date\":1586196838}}";
 
+const char *data_arr = "{\"asks\":[[37749.99,0.00257759],[37750,0.82968792],[37799.99998,0.00162446],[37800,0.01368256],[37896,0.0054],[37899.9399,0.00128477]]}";
+
 
 json_t *root;
 
 void setUp() {}
 
 void tearDown() {}
+
+void
+test_json_get_array_ok(void)
+{
+	json_t *arr, *root_arr;
+	size_t size;
+
+	root_arr = json_parse_str(data_arr);
+	arr = json_get_array(root_arr, "asks", &size);
+
+	TEST_ASSERT_NOT_NULL(root_arr);
+	TEST_ASSERT_NOT_NULL(arr);
+
+	TEST_ASSERT_EQUAL_INT(6, size);
+
+	json_free(root_arr);
+}
 
 void
 test_json_get_integer_ok(void)
@@ -101,6 +120,7 @@ main(void)
 	RUN_TEST(test_json_get_string_ok);
 	RUN_TEST(test_json_get_double_str_ok);
 	RUN_TEST(test_json_get_integer_ok);
+	RUN_TEST(test_json_get_array_ok);
 	UNITY_END();
 	json_free(root);
 	return (0);

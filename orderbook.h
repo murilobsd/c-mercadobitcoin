@@ -14,22 +14,22 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef _JSON_H
-#define _JSON_H
+#ifndef _ORDERBOOK_H
+#define _ORDERBOOK_H
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "order.h"
 
-#include <jansson.h>
+typedef struct orderbook_t * OrderBookPtr;
 
-int		json_get_integer(json_t *, const char *);
-void		json_free(json_t *);
-json_t		*json_get_obj(json_t *, const char *);
-json_t		*json_parse_str(const char *);
-json_t		*json_get_array(json_t *, const char *, size_t *);
-const char	*json_get_string(json_t *, const char *);
-double		json_get_double_str(json_t *, const char *);
-double		json_get_double(json_t *, const char *);
-double		json_get_array_double(json_t *, size_t);
+OrderBookPtr	init_orderbook_fromjson(const char *);
+void			orderbook_free(OrderBookPtr);
+const char 		*orderbook_get_modname(void);
+/*
+size_t			orderbook_get_asks(OrderBookPtr, **OrderPtr);
+OrderPtr		orderbook_get_ask(OrderBookPtr, size_t);
+size_t			orderbook_get_bids(OrderBookPtr, **OrderPtr);
+OrderPtr		orderbook_get_bid(OrderBookPtr, size_t);
+size_t			orderbook_get_size(OrderBookPtr);
+*/
 
-#endif /* _JSON_H */
+#endif /* _ORDERBOOK_H */

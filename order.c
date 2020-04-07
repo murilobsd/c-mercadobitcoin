@@ -93,10 +93,11 @@ init_order(OrderType t, double price, double qtd)
 }
 
 void
-order_free(OrderPtr o)
+order_free(OrderPtr *o)
 {
 	if (o != NULL) {
-		free(o);
+		free(*o);
+                *o = NULL;
 	}
 }
 

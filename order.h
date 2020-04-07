@@ -26,7 +26,7 @@ typedef enum {
 } OrderType;
 
 OrderPtr	init_order(OrderType, double, double);
-void		order_free(OrderPtr);
+void		order_free(OrderPtr *);
 const char 	*order_get_modname(void);
 double		order_get_price(OrderPtr);
 double		order_get_quantity(OrderPtr);

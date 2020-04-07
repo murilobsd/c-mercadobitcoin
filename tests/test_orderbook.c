@@ -14,22 +14,36 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef _JSON_H
-#define _JSON_H
+#include <unity.h>
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "orderbook.h"
 
-#include <jansson.h>
+const char *data = "{\"asks\":[[38349.98993,0.17634193],[38349.99,0.18999999],[38350,0.12942862],[38438.89421,0.26108263],[38438.89422,0.29529834],[38439,0.0996]],\"bids\":[[38250.94,1.44220045],[38234,0.01574933],[38220.01,0.02439612],[38200,0.33401958],[38199.99,0.00131],[38199.98,0.11]]}";
 
-int		json_get_integer(json_t *, const char *);
-void		json_free(json_t *);
-json_t		*json_get_obj(json_t *, const char *);
-json_t		*json_parse_str(const char *);
-json_t		*json_get_array(json_t *, const char *, size_t *);
-const char	*json_get_string(json_t *, const char *);
-double		json_get_double_str(json_t *, const char *);
-double		json_get_double(json_t *, const char *);
-double		json_get_array_double(json_t *, size_t);
+void
+setUp(void) {}
 
-#endif /* _JSON_H */
+void
+tearDown(void) {}
+
+void
+test_init_orderbook_fromjson_ok(void)
+{
+	OrderBookPtr ob;
+
+	ob = init_orderbook_fromjson(data);
+	
+	TEST_ASSERT_NOT_NULL(ob);
+
+	orderbook_free(ob);
+}
+
+int
+main(void)
+{
+	UNITY_BEGIN();
+	RUN_TEST(test_init_orderbook_fromjson_ok);
+	UNITY_END();
+	return (0);
+}
+

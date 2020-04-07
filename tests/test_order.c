@@ -42,7 +42,7 @@ test_init_order_bid_ok(void)
 	TEST_ASSERT_EQUAL_DOUBLE(10410.00006000, price);
 	TEST_ASSERT_EQUAL_DOUBLE(2.09190016, qtd);
 
-	order_free(o);
+	order_free(&o);
 }
 
 void
@@ -63,7 +63,7 @@ test_init_order_ask_ok(void)
 	TEST_ASSERT_EQUAL_DOUBLE(10410.00006000, price);
 	TEST_ASSERT_EQUAL_DOUBLE(2.09190016, qtd);
 
-	order_free(o);
+	order_free(&o);
 }
 
 int
