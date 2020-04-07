@@ -14,19 +14,20 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef _JSON_H
-#define _JSON_H
+#ifndef _TICKER_H
+#define _TICKER_H
 
-#include <stdbool.h>
-#include <stdint.h>
+typedef struct ticker_t * TickerPtr;
 
-#include <jansson.h>
+TickerPtr	init_ticker_fromjson(const char *);
+void		ticker_free(TickerPtr *);
+const char 	*ticker_get_modname(void);
+double		ticker_get_high(TickerPtr);
+double		ticker_get_low(TickerPtr);
+double		ticker_get_vol(TickerPtr);
+double		ticker_get_last(TickerPtr);
+double		ticker_get_buy(TickerPtr);
+double		ticker_get_sell(TickerPtr);
+uint64_t	ticker_get_date(TickerPtr);
 
-int		json_get_integer(json_t *, const char *);
-void		json_free(json_t *);
-json_t		*json_get_obj(json_t *, const char *);
-json_t		*json_parse_str(const char *);
-const char	*json_get_string(json_t *, const char *);
-double		json_get_double_str(json_t *, const char *);
-
-#endif /* _JSON_H */
+#endif /* _TICKER_H */
