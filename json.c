@@ -19,7 +19,6 @@
 
 #include "json.h"
 
-
 /* TODO: put this on utils.c */
 static double xstrtod(const char *);
 
@@ -164,15 +163,28 @@ json_parse_str(const char *data)
 {
 	json_error_t error;
 	json_t *root = NULL;
+        int j_type;
 
 	root = json_loads(data, 0, &error);
 
 	if (root == NULL)
 		printf("error: on line %d: %s\n", error.line, error.text);
-
-	/* TODO: change this sometimes array object */
-	if (json_is_object(root) == 0)
-		json_free(root);
+        else { 
+                j_type = json_typeof(root);
+                switch (j_type) {
+                case JSON_OBJECT:
+                        if (json_is_object(root) == 0)
+                                json_free(root);
+                        break;
+                case JSON_ARRAY:
+                        if (json_is_array(root) == 0)
+                                json_free(root);
+                        break;
+                default:
+                        json_free(root);
+                        break;
+                }
+        }
 
 	return root;
 }
