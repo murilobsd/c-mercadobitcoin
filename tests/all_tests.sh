@@ -7,3 +7,4 @@ VERBOSE=$1
 ./test_orderbook $VERBOSE
 ./test_ticker $VERBOSE
 ./test_trade $VERBOSE
+./test_day_summary $VERBOSE
