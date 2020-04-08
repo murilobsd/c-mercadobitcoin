@@ -16,7 +16,7 @@ mbc.a: ${OBJS}
 
 all: mbc.a
 
-test: mbc.a
+tests: mbc.a
 	$(MAKE) -C tests all
 clean:
 	rm -f *.o *.a *.core
