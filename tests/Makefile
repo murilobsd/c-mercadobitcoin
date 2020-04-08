@@ -9,5 +9,14 @@ SCRIPT_TEST=	all_tests.sh
 test_json:
 	${CC} ${CFLAGS} test_json.c $(LIB) -o $@ $(LDFLAGS)
 
-all: test_json
+test_ticker:
+	${CC} ${CFLAGS} test_ticker.c $(LIB) -o $@ $(LDFLAGS)
+
+test_order:
+	${CC} ${CFLAGS} test_order.c $(LIB) -o $@ $(LDFLAGS)
+
+test_orderbook:
+	${CC} ${CFLAGS} test_orderbook.c $(LIB) -o $@ $(LDFLAGS)
+
+all: test_json test_ticker test_order test_orderbook
 	@sh $(SCRIPT_TEST) -v
