@@ -69,7 +69,7 @@ json_get_double(json_t *node, const char *nodename)
 
 	obj = json_object_get(node, nodename);
 
-	if (!json_is_real(obj))
+	if (!json_is_number(obj))
 		json_free(node);
 
 	value = json_real_value(obj);
@@ -130,10 +130,14 @@ json_get_string(json_t *node, const char *nodename)
 
 	obj = json_object_get(node, nodename);
 
+        //printf("json_get_string key: %s obj address: %p\n", nodename, obj);
+
 	if (!json_is_string(obj))
 		json_free(node);
 
 	const char *str = json_string_value(obj);
+        //printf("json_get_string key: %s obj value: %s\n", nodename, str);
+
 	return str;
 	
 }
