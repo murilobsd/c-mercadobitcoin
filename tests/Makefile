@@ -12,11 +12,17 @@ test_json:
 test_ticker:
 	${CC} ${CFLAGS} test_ticker.c $(LIB) -o $@ $(LDFLAGS)
 
+test_trade:
+	${CC} ${CFLAGS} test_trade.c $(LIB) -o $@ $(LDFLAGS)
+
 test_order:
 	${CC} ${CFLAGS} test_order.c $(LIB) -o $@ $(LDFLAGS)
 
 test_orderbook:
 	${CC} ${CFLAGS} test_orderbook.c $(LIB) -o $@ $(LDFLAGS)
 
-all: test_json test_ticker test_order test_orderbook
+all: test_json test_ticker test_trade test_order test_orderbook
 	@sh $(SCRIPT_TEST) -v
+
+clean:
+	rm -f test_json test_ticker test_trade test_order test_ordebook

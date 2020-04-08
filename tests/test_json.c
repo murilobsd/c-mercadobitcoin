@@ -23,6 +23,8 @@ const char *data = "{\"ticker\":{\"high\":\"37700.00000000\",\"low\":\"35260.000
 
 const char *data_arr = "{\"asks\":[[37749.99,0.00257759],[37750,0.82968792],[37799.99998,0.00162446],[37800,0.01368256],[37896,0.0054],[37899.9399,0.00128477]]}";
 
+const char *data_arr_arr = "[[37749.99,0.00257759],[37750,0.82968792],[37799.99998,0.00162446],[37800,0.01368256],[37896,0.0054],[37899.9399,0.00128477]]";
+
 
 json_t *root;
 
@@ -94,9 +96,15 @@ test_json_get_string_ok(void)
 void
 test_json_parse_str_ok(void)
 {
+        json_t *root_arr;
+
 	root = json_parse_str(data);
+	root_arr = json_parse_str(data_arr_arr);
 	
 	TEST_ASSERT_NOT_NULL(root);
+	TEST_ASSERT_NOT_NULL(root_arr);
+
+        json_free(root_arr);
 }
 
 void
