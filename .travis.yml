@@ -6,7 +6,7 @@ install:
         - sudo apt-get install -y libjansson-dev
 
 before_script:
-        - mkdir -p unity/build && cd unity/build && cmake .. && cd ../
+        - mkdir -p tests/unity/build && cd tests/unity/build && cmake .. && cd ../../
 
 script:
   - make tests
