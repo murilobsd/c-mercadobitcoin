@@ -34,8 +34,6 @@ Build lib:
 make
 ```
 
-```
-
 ## ToDo
 
 Free Api:
