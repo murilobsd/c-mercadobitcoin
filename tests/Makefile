@@ -11,7 +11,11 @@ OUT=		test_json\
 		test_trade\
 		test_order\
 		test_orderbook\
-		test_day_summary
+		test_day_summary \
+		test_coin
+
+test_coin:
+	${CC} ${CFLAGS} test_coin.c $(LIB) -o $@ $(LDFLAGS)
 
 test_day_summary:
 	${CC} ${CFLAGS} test_day_summary.c $(LIB) -o $@ $(LDFLAGS)

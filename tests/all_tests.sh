@@ -8,3 +8,4 @@ VERBOSE=$1
 ./test_ticker $VERBOSE
 ./test_trade $VERBOSE
 ./test_day_summary $VERBOSE
+./test_coin $VERBOSE

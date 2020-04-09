@@ -8,7 +8,8 @@ OBJS+=		json.o \
 		orderbook.o \
 		ticker.o \
 		trade.o \
-		day_summary.o
+		day_summary.o \
+		coin.o
 
 .c.o:
 	${CC} ${CFLAGS} -c $<
