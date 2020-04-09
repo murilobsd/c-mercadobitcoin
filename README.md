@@ -19,8 +19,8 @@
 
 Before installing the library has **dependencies**:
 
-1. [libcurl 3][1] 
-2. [jansson][2]
+1. [libcurl][1] 
+2. [libjansson][2]
 
 
 ```bash
@@ -34,66 +34,6 @@ Build lib:
 make
 ```
 
-Build example:
-
-```bash
-make example
-```
-
-## Usage
-
-```c
-#include <stdio.h>
-
-#include <mb/mb.h>
-
-int
-main(int argc, char *argv[])
-{
-		FreeApi *f = freeapi_init();
-		Sticker *st;
-
-		f->ops->ticker(f, BTC);
-
-		if (f->ops->get_error(f) != MBE_OK) {
-				fprintf(stderr, "Error: %s\n", mb_get_strerro(f);
-				return (1);
-		}
-
-		st = (Sticker *)f->ops->get_data(f);
-		
-		printf("=========== Ticker ============\n");
-		printf("High: %f\n", st->high);
-		printf("Low: %f\n", st->low);
-		printf("Vol: %f\n", st->vol);
-		printf("Last: %f\n", st->last);
-		printf("Buy: %f\n", st->buy);
-		printf("Sell: %f\n", st->sell);
-		printf("Date: %u\n", st->date);
-		printf("===============================\n");
-
-		clean_freeapi(f);
-		
-		return (0);
-}
-```
-
-and build
-
-```bash
-cc ticker.c -o ticker -lmbc
-./ticker
-
-=========== Ticker ============
-High: 36000.000000
-Low: 35400.000000
-Vol: 78.731262
-Last: 35689.990000
-Buy: 35502.464690
-Sell: 35689.990000
-Date: 1586064247
-===============================
-
 ```
 
 ## ToDo
@@ -102,10 +42,10 @@ Free Api:
 
 |Method|Status|Test|
 |------|------|----|
-|ticker|Implementing|-|
-|orderbook|-|-|
-|trades|-|-|
-|day-summary|-|-|
+|ticker|Implemented|OK|
+|orderbook|Implemented|OK|
+|trades|Implemented|OK|
+|day-summary|Implemented|OK|
 
 ## Other libraries
 
