@@ -20,7 +20,7 @@
 Before installing the library has **dependencies**:
 
 1. [libcurl 3][1] 
-2. [jannson][2]
+2. [jansson][2]
 
 
 ```bash
